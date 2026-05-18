@@ -86,23 +86,35 @@ function update() {
     // Move the snake (add new head)
     snake.unshift([headX, headY]);
 
-  // RULE 3: Eating the Apple (Growing)
- if (Math.abs(headX - apple[0]) < 0.05 && Math.abs(headY - apple[1]) < 0.05) {
- spawnApple(); // Leave the tail attached (snake grows)
+// RULE 3: Eating the Apple (Growing)
+    if (Math.abs(headX - apple[0]) < 0.05 && Math.abs(headY - apple[1]) < 0.05) {
+        spawnApple(); // Leave the tail attached (snake grows)
         
-  // --- ADD THESE TWO LINES ---
-  eatSound.currentTime = 0; // Rewind sound to the start
-  eatSound.play();          // Play the sound!
+        eatSound.currentTime = 0; // Rewind sound to the start
+        eatSound.play();          // Play the sound!
         
-  } else {
-  snake.pop(); // Remove tail if no apple eaten
-  }
+        // --- ADD THIS LINE TO UPDATE THE SIDE PANEL SCORE ---
+        document.getElementById('live-score').innerText = snake.length - 3;
+        
+    } else {
+        snake.pop(); // Remove tail if no apple eaten
+    }
 }
 
 function gameOver(reason) {
     isGameOver = true;
-    alert("GAME OVER: " + reason + "\nScore: " + (snake.length - 3));
-    location.reload(); // Quick way to restart
+    
+    // Grab our HTML overlay elements
+    const overlay = document.getElementById("game-overlay");
+    const reasonDisplay = document.getElementById("reason-text");
+    const scoreDisplay = document.getElementById("score-text");
+    
+    // Inject the game stats into the overlay text
+    reasonDisplay.innerText = reason;
+    scoreDisplay.innerText = snake.length - 3;
+    
+    // Change display from "none" to "flex" to show it beautifully centered
+    overlay.style.display = "flex";
 }
 
 // --- 4. DRAWING ---
